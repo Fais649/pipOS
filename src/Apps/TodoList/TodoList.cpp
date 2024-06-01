@@ -83,19 +83,20 @@ void TodoList::processTouch(int touchPosX, int touchPosY)
 
 void TodoList::readDataVault(int& touchPosX, int& touchPosY, char textMatrix[DISPLAY_MAX_ROWS][DISPLAY_MAX_COLS])
 {
-    if (xSemaphoreTake(Xenomorph, portMAX_DELAY)) {
-        touchPosX = vault.touchPosX;
-        touchPosY = vault.touchPosY;
-        keyCount = vault.keyCount;
+    if (diver.inhale()) {
+        DataVault loot = diver.dive();
+        touchPosX = loot.touchPosX;
+        touchPosY = loot.touchPosY;
+        keyCount = loot.keyCount;
         for (size_t i = 0; i < DISPLAY_MAX_ROWS; i++) {
-            strncpy(textMatrix[i], vault.textMatrix[i], DISPLAY_MAX_COLS + 1);
+            strncpy(textMatrix[i], loot.textMatrix[i], DISPLAY_MAX_COLS + 1);
         }
 
-        vault.touchPosX = 0;
-        vault.touchPosY = 0;
-        vault.keyCount = 0;
-        xSemaphoreGive(Xenomorph);
-    }
+        diver.drop(LOOT_TOUCH_POS_X, 0, sizeof(0));
+        diver.drop(LOOT_TOUCH_POS_Y, 0, sizeof(0));
+        diver.drop(LOOT_KEY_COUNT, 0, sizeof(0));
+        diver.exhale();
+        }
 }
 
 void TodoList::drawTodoList(char textMatrix[DISPLAY_MAX_ROWS][DISPLAY_MAX_COLS])

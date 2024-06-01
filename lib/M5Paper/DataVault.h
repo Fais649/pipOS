@@ -1,27 +1,18 @@
-#ifndef DataVault_H
-#define DataVault_H
+#ifndef DATAVAULT_H
+#define DATAVAULT_H
 
 #include <Globals.h>
-#include <Preferences.h>
-#include <freertos/FreeRTOS.h>
-#include <freertos/semphr.h>
 
-struct SharedData {
+#define LOOT_TOUCH_POS_X "touchPosX"
+#define LOOT_TOUCH_POS_Y "touchPosY"
+#define LOOT_KEY_COUNT "keyCount"
+#define LOOT_TEXT_MATRIX "textMatrix"
+
+struct DataVault {
     int touchPosX;
     int touchPosY;
     int keyCount;
     char textMatrix[DISPLAY_MAX_ROWS][DISPLAY_MAX_COLS];
-};
-
-SemaphoreHandle_t Xenomorph;
-SharedData vault;
-
-class DataVault {
-public:
-    DataVault();
-    Preferences dvpreferences;
-    void saveTextMatrix(const char* key, char array[][DISPLAY_MAX_COLS]);
-    void getTextMatrix(const char* key, char array[][DISPLAY_MAX_COLS]);
 };
 
 #endif

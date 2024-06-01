@@ -1,9 +1,8 @@
 #ifndef Input_h
 #define Input_h
 
-#include "DataVault.h"
+#include "VaultDiver.h"
 #include <Globals.h>
-
 #include "./CardKb/CardKb.h"
 #include "./CardKb/TextArea.h"
 #include <M5EPD.h>
@@ -21,6 +20,7 @@ class Input {
         TaskHandle_t scanTpHandle;
         CardKb cardKb;
         TextArea textArea;
+        VaultDiver diver;
 };
 
 #endif
