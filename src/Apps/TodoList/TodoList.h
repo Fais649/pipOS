@@ -5,8 +5,6 @@
 #include <Globals.h>
 #include <VaultDiver.h>
 
-#define BOX_PARAMS 5
-
 class TodoList {
 public:
     void init();
