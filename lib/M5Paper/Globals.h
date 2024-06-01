@@ -18,6 +18,8 @@
 #define DISPLAY_MAX_ROWS 9
 #define DISPLAY_MAX_COLS 33
 
+#define BOX_PARAMS 5
+
 #define EPD_BLACK 15
 #define EPD_WHITE 0
 

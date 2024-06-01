@@ -11,6 +11,16 @@ void TodoList::init()
     initButtonData();
     m5paper.init();
 
+    if (diver.inhale()) {
+        DataVault loot = diver.dive();
+
+        for (size_t i = 0; i < DISPLAY_MAX_ROWS; i++) {
+            memcpy(checkBoxes[i], loot.checkBoxes[i], BOX_PARAMS);
+        }
+
+        diver.exhale();
+    }
+
     xTaskCreatePinnedToCore(TodoList::TodoListTaskf, /* Task function */
         "TodoListTaskf", /* Name of the task */
         10000, /* Stack size in words */
@@ -92,11 +102,13 @@ void TodoList::readDataVault(int& touchPosX, int& touchPosY, char textMatrix[DIS
             strncpy(textMatrix[i], loot.textMatrix[i], DISPLAY_MAX_COLS + 1);
         }
 
+        diver.drop(LOOT_CHECK_BOXES, checkBoxes, DISPLAY_MAX_ROWS * BOX_PARAMS * sizeof(int));
         diver.drop(LOOT_TOUCH_POS_X, 0, sizeof(0));
         diver.drop(LOOT_TOUCH_POS_Y, 0, sizeof(0));
         diver.drop(LOOT_KEY_COUNT, 0, sizeof(0));
+
         diver.exhale();
-        }
+    }
 }
 
 void TodoList::drawTodoList(char textMatrix[DISPLAY_MAX_ROWS][DISPLAY_MAX_COLS])
