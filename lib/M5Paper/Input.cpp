@@ -37,18 +37,23 @@ void Input::scanTpTask(void* pvParameters)
 
 void Input::scanKb()
 {
-    textArea.refill(vault.textMatrix);
+    textArea.refill(diver.dive().textMatrix);
 
     while (1) {
         cardKb.scan();
         if (cardKb.isKeyPressed()) {
             textArea.handleInput(cardKb.getChar());
-            if (xSemaphoreTake(Xenomorph, portMAX_DELAY)) {
+            if (diver.inhale()) {
+                DataVault loot = diver.dive();
+
                 for (size_t i = 0; i < DISPLAY_MAX_ROWS; i++) {
-                    vault.keyCount++;
-                    strncpy(vault.textMatrix[i], textArea.getCharMatrixRow(i), DISPLAY_MAX_COLS + 1);
+                    int countUp = loot.keyCount + 1;
+                    diver.drop(LOOT_KEY_COUNT, &countUp, sizeof(countUp));
+                    strncpy(loot.textMatrix[i], textArea.getCharMatrixRow(i), DISPLAY_MAX_COLS + 1);
+                    diver.drop(LOOT_TEXT_MATRIX, loot.textMatrix, DISPLAY_MAX_ROWS * DISPLAY_MAX_COLS * sizeof(char));
                 }
-                xSemaphoreGive(Xenomorph);
+
+                diver.exhale();
             }
         }
 
@@ -63,11 +68,14 @@ void Input::scanTp()
         if (!M5.TP.isFingerUp()) {
             vTaskDelay(5 / portTICK_PERIOD_MS);
             if (!M5.TP.isFingerUp()) {
-                if (xSemaphoreTake(Xenomorph, portMAX_DELAY)) {
-                    vault.touchPosX = M5.TP.readFingerX(0);
-                    vault.touchPosY = M5.TP.readFingerY(0);
+                if (diver.inhale()) {
+                    uint16_t touchX = M5.TP.readFingerX(0);
+                    uint16_t touchY = M5.TP.readFingerY(0);
 
-                    xSemaphoreGive(Xenomorph);
+                    diver.drop(LOOT_TOUCH_POS_X, &touchX, sizeof(touchX));
+                    diver.drop(LOOT_TOUCH_POS_Y, &touchY, sizeof(touchY));
+
+                    diver.exhale();
                 }
             }
         }

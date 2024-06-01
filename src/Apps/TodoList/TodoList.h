@@ -3,6 +3,7 @@
 
 #include <M5paper.h>
 #include <Globals.h>
+#include <VaultDiver.h>
 
 #define BOX_PARAMS 5
 
@@ -21,6 +22,7 @@ private:
     void drawLogo();
     int getBoxStartPosY(int rowId);
     int getBoxStopPosY(int rowId);
+    VaultDiver diver;
 };
 
 #endif
